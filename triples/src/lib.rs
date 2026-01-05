@@ -3,7 +3,7 @@ pub mod euclid;
 
 #[cfg(test)]
 mod tests {
-    use crate::berggren;
+    use crate::{berggren, euclid};
 
     use super::euclid::gcd;
     #[test]
@@ -22,28 +22,50 @@ mod tests {
     use super::euclid::triples as euclid_triples;
     use std::io::Cursor;
 
+    const LIMITS: [usize; 8] = [10, 50, 100, 500, 1000, 2000, 5000, 10000];
+
     #[test]
     fn test_triples_count() {
-        let limit = 100;
-        let mut count_euclid = 0;
-        let mut count_berggren = 0;
-        euclid_triples(limit, &mut count_euclid, Some(&mut Cursor::new(Vec::new())));
-        berggren_triples(
-            limit,
-            &mut count_berggren,
-            Some(&mut Cursor::new(Vec::new())),
-            berggren::INITIAL_TRIPLE,
-        );
-        assert_eq!(count_euclid, count_berggren);
+        for &limit in &LIMITS {
+            let mut count_euclid = 0;
+            let mut count_berggren = 0;
+            euclid_triples(limit, &mut count_euclid, None::<&mut Cursor<Vec<u8>>>);
+            berggren_triples(
+                limit,
+                &mut count_berggren,
+                None::<&mut Cursor<Vec<u8>>>,
+                berggren::INITIAL_TRIPLE,
+            );
+            assert_eq!(count_euclid, count_berggren);
+        }
     }
 
     #[test]
     fn test_triples_no_output() {
-        let limit = 1000;
-        let mut count_euclid = 0;
-        let mut count_berggren = 0;
-        euclid_triples(limit, &mut count_euclid, None::<&mut Cursor<Vec<u8>>>);
-        berggren_triples(limit, &mut count_berggren, None::<&mut Cursor<Vec<u8>>>, berggren::INITIAL_TRIPLE);
-        assert_eq!(count_euclid, count_berggren);
+        for &limit in &LIMITS {
+            let mut count_euclid = 0;
+            let mut count_berggren = 0;
+            euclid_triples(limit, &mut count_euclid, None::<&mut Cursor<Vec<u8>>>);
+            berggren_triples(
+                limit,
+                &mut count_berggren,
+                None::<&mut Cursor<Vec<u8>>>,
+                berggren::INITIAL_TRIPLE,
+            );
+            assert_eq!(count_euclid, count_berggren);
+        }
+    }
+
+    #[test]
+    fn test_euclid_iter() {
+        for &limit in &LIMITS {
+            let mut count = 0;
+            for (_a, _b, _c) in euclid::EuclidIter::new(limit) {
+                count += 1;
+            }
+            let mut expected_count = 0;
+            euclid_triples(limit, &mut expected_count, None::<&mut Cursor<Vec<u8>>>);
+            assert_eq!(count, expected_count);
+        }
     }
 }
