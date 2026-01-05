@@ -25,3 +25,16 @@ big-limits-run:
 
 big-limits: big-limits-build
 	cd target/release && ./big-limits
+
+# Print Triples Example
+print-triples-clean:
+	cargo clean --package print-triples
+
+print-triples-build:
+	cargo build --release --package print-triples
+
+print-triples-run:
+	cargo run --release --package print-triples
+
+print-triples: print-triples-build
+	cd target/release && ./print-triples

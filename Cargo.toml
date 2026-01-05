@@ -4,6 +4,7 @@ members = [
     "triples",
     "examples/benchmark",
     "examples/big_limits",
+    "examples/print_triples",
 ]
 default-members = [
     "triples",

@@ -18,7 +18,7 @@ pub fn triples(
 
     // write to buffered output
     if let Some(out) = buf.as_deref_mut() {
-        writeln!(out, "{}^2 + {}^2 = {}^2", sol[0], sol[1], sol[2]).unwrap();
+        writeln!(out, "(BERGGREN) {}^2 + {}^2 = {}^2", sol[0], sol[1], sol[2]).unwrap();
     }
     *count += 1;
 
@@ -39,7 +39,7 @@ pub fn triples(
         if let Some(out) = buf.as_deref_mut() {
             writeln!(
                 out,
-                "{}^2 + {}^2 = {}^2",
+                "(BERGGREN) {}^2 + {}^2 = {}^2",
                 scaled_sol[0], scaled_sol[1], scaled_sol[2]
             )
             .unwrap();
