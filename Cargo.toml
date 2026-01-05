@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "triples",
     "examples/benchmark",
+    "examples/big_limits",
 ]
 default-members = [
     "triples",

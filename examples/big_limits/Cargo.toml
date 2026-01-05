@@ -1,0 +1,18 @@
+[package]
+name = "big-limits"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license-file = { workspace = true }
+
+[dependencies]
+plotters = "0.3.7"
+triples = { workspace = true }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+target-cpu = "native"
