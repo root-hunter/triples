@@ -1,62 +1,51 @@
-#![feature(portable_simd)]
-use std::simd::{Mask, Simd, StdFloat, cmp::{SimdPartialEq, SimdPartialOrd}};
+mod euclide;
+mod berggren;
 
-// const N: usize = 8192;
-const N: usize = 8192 * 2;
-const LANE: usize = 8;
+use std::io::{BufWriter, Write};
+
+const N: usize = 5_000_000;
+
+fn test_euclide(limit: usize, handle: Option<&mut impl Write>) {
+    let mut count = 0;
+    let start_time = std::time::Instant::now();
+    euclide::stream_triples(limit, &mut count, handle);
+    let duration = start_time.elapsed();
+
+    println!("(EUCLIDE) Found {} results [limit={}]", count, limit);
+    println!("(EUCLIDE) Time elapsed: {:?} [limit={}]", duration, limit);
+}
+
+fn test_berggren(limit: usize, handle: Option<&mut impl Write>) {
+    let mut count = 0;
+    let start_time = std::time::Instant::now();
+    berggren::stream_triples(limit, &mut count, handle, [3, 4, 5]);
+    let duration = start_time.elapsed();
+
+    println!("(BERGGREN) Found {} results [limit={}]", count, limit);
+    println!("(BERGGREN) Time elapsed: {:?} [limit={}]", duration, limit);
+}
 
 fn main() {
-    let mut mat = Vec::with_capacity(N * 2);
-    let start_time = std::time::Instant::now();
+    let limits = [
+        100, 
+        500,
+        1_000,
+        2_000,
+        10_000,
+        50_000,
+        100_000,
+        1_000_000,
+        5_000_000
+    ];
 
-    let n_simd = Simd::splat(N as f64);
+    let stdout = std::io::stdout();
+    let mut handle = BufWriter::new(stdout.lock());
 
-    for a in 2..N {
-        let x = (a * a) as f64;
-        let x_simd = Simd::splat(x);
-
-        let mut b = a;
-        while b <= N {
-            // batch di 8 b
-            let mut b_values = [0f64; LANE];
-            let mut max_b = LANE;
-
-            for i in 0..LANE {
-                if b + i < N {
-                    b_values[i] = (b + i) as f64;
-                } else {
-                    b_values[i] = 0.0;
-                    max_b = i;
-                    break;
-                }
-            }
-
-            let b_simd = Simd::<f64, 8>::from_array(b_values);
-            let c2_simd = b_simd * b_simd + x_simd;
-            let c_simd = c2_simd.sqrt();
-
-            // Maschera per verificare quali c sono interi e <= n
-            let mask = (c_simd.fract().simd_eq(Simd::splat(0.0))) 
-                & (c_simd.simd_lt(n_simd)) & b_simd.simd_lt(c_simd);
-
-            let c_array = c_simd.to_array();
-            let b_array = b_simd.to_array();
-
-            for i in 0..LANE {
-                if mask.test(i) && i < max_b {
-                    mat.push([a, b_array[i] as usize, c_array[i] as usize]);
-                }
-            }
-
-            b += LANE;
-        }
+    for &limit in &limits {
+        let handle = None::<&mut BufWriter<std::io::StdoutLock>>;
+        test_euclide(limit, handle);
+    
+        let handle = None::<&mut BufWriter<std::io::StdoutLock>>;
+        test_berggren(limit, handle);
     }
-
-    for t in &mat {
-        println!("{}^2+{}^2={}^2", t[0], t[1], t[2]);
-    }
-
-    let duration = start_time.elapsed();
-    println!("Found {} triples.", mat.len());
-    println!("Time elapsed: {:?}", duration);
 }

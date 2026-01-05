@@ -18,14 +18,17 @@ void my_calc(long MAX){
 
     long mat[MAX*2][3];
 
-    for(int i = 2; i < MAX; ++i){
+    for(long long i = 2; i < MAX; ++i){
         x = i*i;
-        for(int j = i; j < x; ++j){
+        for(long long j = i; j < x; ++j){
             y = j*j;
             z = sqrt(x+y);
 
             if(z > MAX) break;
             if(z - (unsigned int) z != 0) continue;
+
+            //printf("%llu^2+%llu^2=%llu^2\n", i, j, (long long unsigned) z);
+
 
             mat[cont][0] = i;
             mat[cont][1] = j;
@@ -35,7 +38,7 @@ void my_calc(long MAX){
         }
     }
 
-    stampa(MAX*2,mat, cont);
+    // stampa(MAX*2,mat, cont);
 
     printf("Trovati %d risultati\n", cont);
 }
