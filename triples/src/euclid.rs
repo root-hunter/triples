@@ -2,7 +2,7 @@ use std::io::Write;
 
 // Binary GCD algorithm
 #[inline(always)]
-fn gcd(mut u: usize, mut v: usize) -> usize {
+pub fn gcd(mut u: usize, mut v: usize) -> usize {
     if u == 0 {
         return v;
     }
