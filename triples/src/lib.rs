@@ -68,4 +68,22 @@ mod tests {
             assert_eq!(count, expected_count);
         }
     }
+
+    #[test]
+    fn test_berggren_iter() {
+        for &limit in &LIMITS {
+            let mut count = 0;
+            for (_a, _b, _c) in berggren::BerggrenIter::new(limit) {
+                count += 1;
+            }
+            let mut expected_count = 0;
+            berggren_triples(
+                limit,
+                &mut expected_count,
+                None::<&mut Cursor<Vec<u8>>>,
+                berggren::INITIAL_TRIPLE,
+            );
+            assert_eq!(count, expected_count);
+        }
+    }
 }

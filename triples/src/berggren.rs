@@ -53,3 +53,67 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
         *count += 1;
     }
 }
+
+pub struct BerggrenIter {
+    limit: usize,
+    stack: Vec<[usize; 3]>,
+    current: Option<[usize; 3]>,
+    scale: usize,
+    scale_max: usize,
+}
+
+#[inline]
+fn apply(mat: &[isize; 9], t: [usize; 3]) -> [usize; 3] {
+    let (a, b, c) = (t[0] as isize, t[1] as isize, t[2] as isize);
+
+    [
+        (mat[0] * a + mat[1] * b + mat[2] * c) as usize,
+        (mat[3] * a + mat[4] * b + mat[5] * c) as usize,
+        (mat[6] * a + mat[7] * b + mat[8] * c) as usize,
+    ]
+}
+
+impl BerggrenIter {
+    pub fn new(limit: usize) -> Self {
+        BerggrenIter {
+            limit,
+            stack: vec![INITIAL_TRIPLE],
+            current: None,
+            scale: 1,
+            scale_max: 0,
+        }
+    }
+}
+
+impl Iterator for BerggrenIter {
+    type Item = (usize, usize, usize);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            if let Some(t) = self.current {
+                if self.scale <= self.scale_max {
+                    let k = self.scale;
+                    self.scale += 1;
+                    return Some((t[0] * k, t[1] * k, t[2] * k));
+                }
+                self.current = None;
+            }
+
+            let t = self.stack.pop()?;
+            if t[2] > self.limit {
+                continue;
+            }
+
+            for i in (0..3).rev() {
+                let child = apply(&MAT_BERGGREN[i], t);
+                if child[2] <= self.limit {
+                    self.stack.push(child);
+                }
+            }
+
+            self.scale_max = self.limit / t[2];
+            self.scale = 1;
+            self.current = Some(t);
+        }
+    }
+}
