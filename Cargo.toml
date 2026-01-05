@@ -1,8 +1,25 @@
 [workspace]
+resolver = "2"
 members = [
     "triples",
     "examples/benchmark",
 ]
+default-members = [
+    "triples",
+]
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+authors = ["Antonio Ricciardi"]
+license-file = "LICENSE"
 
 [workspace.dependencies]
 triples = { path = "triples" }
+
+[patch.crates-io]
+triples = { path = "triples" }
+
+[profile.release]
+opt-level = 3
+lto = "fat"

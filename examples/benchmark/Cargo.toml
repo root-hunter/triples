@@ -1,11 +1,13 @@
 [package]
 name = "benchmark"
-version = "0.1.0"
-edition = "2024"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license-file = { workspace = true }
 
 [dependencies]
 plotters = "0.3.7"
-triples = { workspace = true}
+triples = { workspace = true }
 
 [profile.release]
 opt-level = 3
