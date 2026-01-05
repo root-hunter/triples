@@ -1,6 +1,6 @@
 use std::{io::{BufWriter}, time::Instant};
 use plotters::prelude::*;
-use triples::methods::{berggren, euclide};
+use triples::{berggren, euclide};
 
 const LIMITS: [usize; 14] = [
     100, 
