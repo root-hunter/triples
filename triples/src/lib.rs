@@ -86,4 +86,40 @@ mod tests {
             assert_eq!(count, expected_count);
         }
     }
+
+    #[test]
+    fn test_berggren_iter_from_mat() {
+        let mat = berggren::MAT_PRICE;
+        for &limit in &LIMITS {
+            let mut count = 0;
+            for (_a, _b, _c) in berggren::BerggrenIter::from_mat(limit, mat) {
+                count += 1;
+            }
+            let mut expected_count = 0;
+            berggren_triples(
+                limit,
+                &mut expected_count,
+                None::<&mut Cursor<Vec<u8>>>,
+                berggren::INITIAL_TRIPLE,
+            );
+            assert_eq!(count, expected_count);
+        }
+    }
+
+    #[test]
+    fn test_iterators_agree() {
+        for &limit in &LIMITS {
+            let mut euclid_count = 0;
+            for (_a, _b, _c) in euclid::EuclidIter::new(limit) {
+                euclid_count += 1;
+            }
+
+            let mut berggren_count = 0;
+            for (_a, _b, _c) in berggren::BerggrenIter::new(limit) {
+                berggren_count += 1;
+            }
+
+            assert_eq!(euclid_count, berggren_count);
+        }
+    }
 }

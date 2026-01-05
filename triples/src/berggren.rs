@@ -60,6 +60,7 @@ pub struct BerggrenIter {
     current: Option<[usize; 3]>,
     scale: usize,
     scale_max: usize,
+    mat: [[isize; 9]; 3],
 }
 
 #[inline]
@@ -81,6 +82,18 @@ impl BerggrenIter {
             current: None,
             scale: 1,
             scale_max: 0,
+            mat: MAT_BERGGREN,
+        }
+    }
+
+    pub fn from_mat(limit: usize, mat: [[isize; 9]; 3]) -> Self {
+        BerggrenIter {
+            limit,
+            stack: vec![INITIAL_TRIPLE],
+            current: None,
+            scale: 1,
+            scale_max: 0,
+            mat,
         }
     }
 }
@@ -105,7 +118,7 @@ impl Iterator for BerggrenIter {
             }
 
             for i in (0..3).rev() {
-                let child = apply(&MAT_BERGGREN[i], t);
+                let child = apply(&self.mat[i], t);
                 if child[2] <= self.limit {
                     self.stack.push(child);
                 }
