@@ -31,7 +31,7 @@ const LIMITS: [usize; 26] = [
     2_000_000_000,
 ];
 
-fn measure_euclide(limit: usize) -> f64 {
+fn measure_euclide_raw(limit: usize) -> f64 {
     let mut count = 0;
     let start_time = Instant::now();
     euclid::generate(
@@ -44,7 +44,18 @@ fn measure_euclide(limit: usize) -> f64 {
     duration.as_secs_f64()
 }
 
-fn measure_berggren(limit: usize) -> f64 {
+fn measure_euclide_iter(limit: usize) -> f64 {
+    let mut count: usize = 0;
+    let start_time = Instant::now();
+    for (_a, _b, _c) in euclid::EuclidIter::new(limit) {
+        count += 1;
+    }
+    let duration = start_time.elapsed();
+    println!("Euclide (Iter) found {} triples up to {}", count, limit);
+    duration.as_secs_f64()
+}
+
+fn measure_berggren_raw(limit: usize) -> f64 {
     let mut count = 0;
     let start_time = Instant::now();
     berggren::generate(
@@ -58,21 +69,48 @@ fn measure_berggren(limit: usize) -> f64 {
     duration.as_secs_f64()
 }
 
+fn measure_berggren_iter(limit: usize) -> f64 {
+    let mut count: usize = 0;
+    let start_time = Instant::now();
+    for (_a, _b, _c) in berggren::BerggrenIter::new(limit) {
+        count += 1;
+    }
+    let duration = start_time.elapsed();
+    println!("Berggren (Iter) found {} triples up to {}", count, limit);
+    duration.as_secs_f64()
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Calcola i tempi
     let mut times_euclide = Vec::new();
+    let mut times_euclide_iter = Vec::new();
     let mut times_berggren = Vec::new();
+    let mut times_berggren_iter = Vec::new();
 
     for &limit in &LIMITS {
-        let t_e = measure_euclide(limit);
+        let t_e = measure_euclide_raw(limit);
         println!("Euclide limit {} -> {:.4} s", limit, t_e);
         times_euclide.push(t_e);
 
-        let t_b = measure_berggren(limit);
+        println!("-----------------------------------------------");
+
+        let t_e_iter = measure_euclide_iter(limit);
+        println!("Euclide (Iter) limit {} -> {:.4} s", limit, t_e_iter);
+        times_euclide_iter.push(t_e_iter);
+
+        println!("-----------------------------------------------");
+
+        let t_b = measure_berggren_raw(limit);
         println!("Berggren limit {} -> {:.4} s", limit, t_b);
         times_berggren.push(t_b);
 
-        println!("-----------------------------------");
+        println!("-----------------------------------------------");
+
+        let t_b_iter = measure_berggren_iter(limit);
+        println!("Berggren (Iter) limit {} -> {:.4} s", limit, t_b_iter);
+        times_berggren_iter.push(t_b_iter);
+
+        println!("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     }
 
     // Disegna il grafico
@@ -82,6 +120,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let max_time = times_euclide
         .iter()
         .chain(times_berggren.iter())
+        .chain(times_euclide_iter.iter())
+        .chain(times_berggren_iter.iter())
         .cloned()
         .fold(0. / 0., f64::max); // massimo tra tutti i tempi
 
@@ -110,6 +150,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .label("Euclide")
         .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
 
+    // Euclide (Iter) line
+    chart
+        .draw_series(LineSeries::new(
+            LIMITS
+                .iter()
+                .zip(times_euclide_iter.iter())
+                .map(|(&x, &y)| (x, y)),
+            &GREEN,
+        ))?
+        .label("Euclide (Iter)")
+        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &GREEN));
+
     // Berggren line
     chart
         .draw_series(LineSeries::new(
@@ -121,6 +173,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ))?
         .label("Berggren")
         .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &BLUE));
+
+    // Berggren (Iter) line
+
+    chart
+        .draw_series(LineSeries::new(
+            LIMITS
+                .iter()
+                .zip(times_berggren_iter.iter())
+                .map(|(&x, &y)| (x, y)),
+            &MAGENTA,
+        ))?
+        .label("Berggren (Iter)")
+        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &MAGENTA));
 
     chart
         .configure_series_labels()
