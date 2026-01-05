@@ -31,7 +31,7 @@ fn measure_berggren(limit: usize) -> f64 {
         limit,
         &mut count,
         Some(&mut writer),
-        [3, 4, 5],
+        berggren::INITIAL_TRIPLE,
     );
     let duration = start_time.elapsed();
     writeln!(writer, "Berggren found {} triples up to {}", count, limit).unwrap();

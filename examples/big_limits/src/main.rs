@@ -24,7 +24,7 @@ fn measure_berggren(limit: usize) -> f64 {
         limit,
         &mut count,
         None::<&mut BufWriter<std::io::StdoutLock>>,
-        [3, 4, 5],
+        berggren::INITIAL_TRIPLE,
     );
     let duration = start_time.elapsed();
     println!("Berggren found {} triples up to {}", count, limit);

@@ -6,6 +6,8 @@ const MAT: [[isize; 9]; 3] = [
     [-1, 2, 2, -2, 1, 2, -2, 2, 3],
 ];
 
+pub const INITIAL_TRIPLE: [usize; 3] = [3, 4, 5];
+
 pub fn triples(
     limit: usize,
     count: &mut usize,
