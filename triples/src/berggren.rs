@@ -1,12 +1,21 @@
 use std::io::Write;
 
-const MAT: [[isize; 9]; 3] = [
+// Info on Berggren's method:
+// https://en.wikipedia.org/wiki/Tree_of_primitive_Pythagorean_triples
+
+pub const INITIAL_TRIPLE: [usize; 3] = [3, 4, 5];
+
+pub const MAT_BERGGREN: [[isize; 9]; 3] = [
     [1, -2, 2, 2, -1, 2, 2, -2, 3],
     [1, 2, 2, 2, 1, 2, 2, 2, 3],
     [-1, 2, 2, -2, 1, 2, -2, 2, 3],
 ];
 
-pub const INITIAL_TRIPLE: [usize; 3] = [3, 4, 5];
+pub const MAT_PRICE: [[isize; 9]; 3] = [
+    [2, 1, -1, -2, 2, 2, -2, 1, 3],
+    [2, 1, 1, 2, -2, 2, 2, -1, 3],
+    [2, -1, 1, 2, 2, 2, 2, 1, 3],
+];
 
 pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>, sol: [usize; 3]) {
     if sol[2] > limit {
@@ -22,9 +31,9 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
     for i in 0..3 {
         let mut res = [0isize; 3];
         for j in 0..3 {
-            res[j] = MAT[i][3 * j] * (sol[0] as isize)
-                + MAT[i][3 * j + 1] * (sol[1] as isize)
-                + MAT[i][3 * j + 2] * (sol[2] as isize);
+            res[j] = MAT_BERGGREN[i][3 * j] * (sol[0] as isize)
+                + MAT_BERGGREN[i][3 * j + 1] * (sol[1] as isize)
+                + MAT_BERGGREN[i][3 * j + 2] * (sol[2] as isize);
         }
         let new_sol = [res[0] as usize, res[1] as usize, res[2] as usize];
         triples(limit, count, buf.as_deref_mut(), new_sol);

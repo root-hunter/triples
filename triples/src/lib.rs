@@ -1,2 +1,2 @@
 pub mod berggren;
-pub mod euclide;
+pub mod euclid;

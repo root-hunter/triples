@@ -1,6 +1,6 @@
 use plotters::prelude::*;
 use std::{io::BufWriter, time::Instant};
-use triples::{berggren, euclide};
+use triples::{berggren, euclid};
 
 const LIMITS: [usize; 26] = [
     100,
@@ -34,7 +34,7 @@ const LIMITS: [usize; 26] = [
 fn measure_euclide(limit: usize) -> f64 {
     let mut count = 0;
     let start_time = Instant::now();
-    euclide::triples(
+    euclid::triples(
         limit,
         &mut count,
         None::<&mut BufWriter<std::io::StdoutLock>>,
