@@ -1,4 +1,4 @@
-const N: usize = 100000;
+const N: usize = 100_000;
 
 fn gcd(mut a: usize, mut b: usize) -> usize {
     while b != 0 {
@@ -11,6 +11,11 @@ fn gcd(mut a: usize, mut b: usize) -> usize {
 
 fn main() {
     let start_time = std::time::Instant::now();
+
+    let n_log = (N as f64).log2();
+    let vec_size = (N as f64 * n_log) as usize;
+
+    let mut vec = Vec::with_capacity(vec_size);
 
     let mut count = 0;
 
@@ -30,7 +35,7 @@ fn main() {
                 let mut kc = c;
    
                 while kc <= N {
-                    println!("{}^2+{}^2={}^2", ka, kb, kc);
+                    vec.push((ka, kb, kc));
 
                     count += 1;
                     ka += a;
@@ -41,7 +46,11 @@ fn main() {
         }
     }
 
-    println!("Trovati {} risultati", count);
+    for (a, b, c) in vec {
+        println!("{}^2 + {}^2 = {}^2", a, b, c);
+    }
+
+    println!("Find {} results", count);
     let duration = start_time.elapsed();
     println!("Time elapsed: {:?}", duration);
 }

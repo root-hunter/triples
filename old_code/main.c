@@ -27,18 +27,18 @@ void my_calc(long MAX){
             if(z > MAX) break;
             if(z - (unsigned int) z != 0) continue;
 
-            printf("%llu^2+%llu^2=%llu^2\n", i, j, (long long unsigned) z);
+            //printf("%llu^2+%llu^2=%llu^2\n", i, j, (long long unsigned) z);
 
 
-            // mat[cont][0] = i;
-            // mat[cont][1] = j;
-            // mat[cont][2] = z;
+            mat[cont][0] = i;
+            mat[cont][1] = j;
+            mat[cont][2] = z;
 
             ++cont;
         }
     }
 
-    // stampa(MAX*2,mat, cont);
+    stampa(MAX*2,mat, cont);
 
     printf("Trovati %d risultati\n", cont);
 }
