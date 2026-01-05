@@ -44,7 +44,6 @@ pub fn stream_triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl
     for m in 2..=m_max {
         let m2 = m * m;
 
-        // Early exit se anche la tripla più piccola con questo m supera il limite
         if m2 + 1 > limit {
             break;
         }
@@ -52,7 +51,13 @@ pub fn stream_triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl
         // Start n at 1 if m is even, else start at 2
         let start_n = if m & 1 == 0 { 1 } else { 2 };
 
-        for n in (start_n..m).step_by(2) {
+        let mut n = start_n;
+
+        loop {
+            if n >= m {
+                break;
+            }
+
             if gcd(m, n) == 1 {
                 let n2 = n * n;
                 let a = m2 - n2;
@@ -68,6 +73,7 @@ pub fn stream_triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl
                     }
                 }
             }
+            n += 2;
         }
     }
 }
