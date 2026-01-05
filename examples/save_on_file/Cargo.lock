@@ -32,14 +32,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "big-limits"
-version = "0.1.0"
-dependencies = [
- "plotters",
- "triples",
-]
-
-[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -530,13 +522,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "print-triples"
-version = "0.1.0"
-dependencies = [
- "triples",
-]
-
-[[package]]
 name = "proc-macro2"
 version = "1.0.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -587,13 +572,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
-]
-
-[[package]]
-name = "save-on-file"
-version = "0.1.0"
-dependencies = [
- "triples",
 ]
 
 [[package]]

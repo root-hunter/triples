@@ -10,8 +10,7 @@ benchmark-build:
 benchmark-run:
 	cargo run --release --package benchmark
 
-benchmark: benchmark-build
-	cd target/release && ./benchmark
+benchmark: benchmark-build benchmark-run
 
 # Big Limits Example
 big-limits-clean:
@@ -23,8 +22,7 @@ big-limits-build:
 big-limits-run:
 	cargo run --release --package big-limits
 
-big-limits: big-limits-build
-	cd target/release && ./big-limits
+big-limits: big-limits-build big-limits-run
 
 # Print Triples Example
 print-triples-clean:
@@ -36,5 +34,16 @@ print-triples-build:
 print-triples-run:
 	cargo run --release --package print-triples
 
-print-triples: print-triples-build
-	cd target/release && ./print-triples
+print-triples: print-triples-build print-triples-run
+
+# Save on File Example
+save-on-file-clean:
+	cargo clean --package save-on-file
+
+save-on-file-build:
+	cargo build --release --package save-on-file
+
+save-on-file-run: 
+	cargo run --release --package save-on-file
+
+save-on-file: save-on-file-build save-on-file-run

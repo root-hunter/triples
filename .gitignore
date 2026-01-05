@@ -3,3 +3,5 @@ target
 /.vscode
 /old_code
 benchmark.png
+*.log
+*.txt
