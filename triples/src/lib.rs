@@ -1,11 +1,50 @@
 pub mod berggren;
 pub mod euclid;
+pub mod utils;
+
+pub trait TripleGenerator: Iterator<Item = (usize, usize, usize)> {}
+
+impl<T> TripleGenerator for T where T: Iterator<Item = (usize, usize, usize)> {}
+
+pub enum Method {
+    Euclid,
+    Berggren,
+}
+
+pub enum TripleIter {
+    Euclid(euclid::EuclidIter),
+    Berggren(berggren::BerggrenIter),
+}
+
+impl TripleIter {
+    pub fn new(limit: usize, method: Method) -> Self {
+        match method {
+            Method::Euclid => TripleIter::Euclid(euclid::EuclidIter::new(limit)),
+            Method::Berggren => TripleIter::Berggren(berggren::BerggrenIter::new(limit)),
+        }
+    }
+}
+
+impl Iterator for TripleIter {
+    type Item = (usize, usize, usize);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self {
+            TripleIter::Euclid(it) => it.next(),
+            TripleIter::Berggren(it) => it.next(),
+        }
+    }
+}
+
+pub fn triples(limit: usize, method: Method) -> impl TripleGenerator {
+    TripleIter::new(limit, method)
+}
 
 #[cfg(test)]
 mod tests {
     use crate::{berggren, euclid};
 
-    use super::euclid::gcd;
+    use super::utils::gcd;
     #[test]
     fn test_gcd() {
         assert_eq!(gcd(48, 18), 6);
@@ -18,8 +57,8 @@ mod tests {
         assert_eq!(gcd(3421, 1234), 1);
     }
 
-    use super::berggren::triples as berggren_triples;
-    use super::euclid::triples as euclid_triples;
+    use super::berggren::generate as berggren_triples;
+    use super::euclid::generate as euclid_triples;
     use std::io::Cursor;
 
     const LIMITS: [usize; 8] = [10, 50, 100, 500, 1000, 2000, 5000, 10000];
@@ -119,6 +158,40 @@ mod tests {
                 berggren_count += 1;
             }
 
+            assert_eq!(euclid_count, berggren_count);
+        }
+    }
+
+    #[test]
+    fn test_triple_iter_enum() {
+        for &limit in &LIMITS {
+            let mut euclid_count = 0;
+            let mut berggren_count = 0;
+            let mut euclid_iter = super::TripleIter::new(limit, super::Method::Euclid);
+            let mut berggren_iter = super::TripleIter::new(limit, super::Method::Berggren);
+            while let Some((_a, _b, _c)) = euclid_iter.next() {
+                euclid_count += 1;
+            }
+            while let Some((_a, _b, _c)) = berggren_iter.next() {
+                berggren_count += 1;
+            }
+            assert_eq!(euclid_count, berggren_count);
+        }
+    }
+
+    #[test]
+    fn test_triples_function() {
+        for &limit in &LIMITS {
+            let mut euclid_count = 0;
+            let mut berggren_count = 0;
+            let mut euclid_iter = super::triples(limit, super::Method::Euclid);
+            let mut berggren_iter = super::triples(limit, super::Method::Berggren);
+            while let Some((_a, _b, _c)) = euclid_iter.next() {
+                euclid_count += 1;
+            }
+            while let Some((_a, _b, _c)) = berggren_iter.next() {
+                berggren_count += 1;
+            }
             assert_eq!(euclid_count, berggren_count);
         }
     }

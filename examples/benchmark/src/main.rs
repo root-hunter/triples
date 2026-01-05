@@ -34,7 +34,7 @@ const LIMITS: [usize; 26] = [
 fn measure_euclide(limit: usize) -> f64 {
     let mut count = 0;
     let start_time = Instant::now();
-    euclid::triples(
+    euclid::generate(
         limit,
         &mut count,
         None::<&mut BufWriter<std::io::StdoutLock>>,
@@ -47,7 +47,7 @@ fn measure_euclide(limit: usize) -> f64 {
 fn measure_berggren(limit: usize) -> f64 {
     let mut count = 0;
     let start_time = Instant::now();
-    berggren::triples(
+    berggren::generate(
         limit,
         &mut count,
         None::<&mut BufWriter<std::io::StdoutLock>>,

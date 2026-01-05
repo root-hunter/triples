@@ -1,30 +1,8 @@
 use std::io::Write;
 
-// Binary GCD algorithm
-#[inline(always)]
-pub fn gcd(mut u: usize, mut v: usize) -> usize {
-    if u == 0 {
-        return v;
-    }
-    if v == 0 {
-        return u;
-    }
+use crate::utils::gcd;
 
-    let shift = (u | v).trailing_zeros();
-    u >>= u.trailing_zeros();
-    loop {
-        v >>= v.trailing_zeros();
-        if u > v {
-            std::mem::swap(&mut u, &mut v);
-        }
-        v -= u;
-        if v == 0 {
-            return u << shift;
-        }
-    }
-}
-
-pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>) {
+pub fn generate(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>) {
     let m_max = ((limit as f32).sqrt() as usize) + 1;
 
     for m in 2..m_max {

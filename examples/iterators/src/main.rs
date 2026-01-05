@@ -28,7 +28,7 @@ fn measure_berggren(limit: usize) -> f64 {
     let mut writer = BufWriter::new(handle);
 
     let start_time = Instant::now();
-    berggren::triples(
+    berggren::generate(
         limit,
         &mut count,
         Some(&mut writer),

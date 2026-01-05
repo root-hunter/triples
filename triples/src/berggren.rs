@@ -17,7 +17,7 @@ pub const MAT_PRICE: [[isize; 9]; 3] = [
     [2, -1, 1, 2, 2, 2, 2, 1, 3],
 ];
 
-pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>, sol: [usize; 3]) {
+pub fn generate(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>, sol: [usize; 3]) {
     if sol[2] > limit {
         return;
     }
@@ -36,7 +36,7 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
                 + MAT_BERGGREN[i][3 * j + 2] * (sol[2] as isize);
         }
         let new_sol = [res[0] as usize, res[1] as usize, res[2] as usize];
-        triples(limit, count, buf.as_deref_mut(), new_sol);
+        generate(limit, count, buf.as_deref_mut(), new_sol);
     }
 
     for i in 1..limit / sol[2] {
