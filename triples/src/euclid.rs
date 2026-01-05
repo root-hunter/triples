@@ -77,7 +77,7 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
                     let mut kc = c;
 
                     for _ in 1..=k_max {
-                        writeln!(out, "(EUCLIDE) {}^2 + {}^2 = {}^2", ka, kb, kc).unwrap();
+                        writeln!(out, "(EUCLID) {}^2 + {}^2 = {}^2", ka, kb, kc).unwrap();
                         ka += a;
                         kb += b;
                         kc += c;
