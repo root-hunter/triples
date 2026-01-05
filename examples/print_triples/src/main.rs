@@ -11,11 +11,7 @@ fn measure_euclide(limit: usize) -> f64 {
     let mut writer = BufWriter::new(handle.lock());
 
     let start_time = Instant::now();
-    euclide::triples(
-        limit,
-        &mut count,
-        Some(&mut writer),
-    );
+    euclide::triples(limit, &mut count, Some(&mut writer));
     let duration = start_time.elapsed();
     writeln!(writer, "Euclide found {} triples up to {}", count, limit).unwrap();
     duration.as_secs_f64()

@@ -4,14 +4,18 @@ use std::io::Write;
 #[inline(always)]
 fn gcd(mut u: usize, mut v: usize) -> usize {
     // Caso base: uno dei due è zero
-    if u == 0 { return v; }
-    if v == 0 { return u; }
+    if u == 0 {
+        return v;
+    }
+    if v == 0 {
+        return u;
+    }
 
     // Trova il numero di zeri trailing comuni
     let shift = (u | v).trailing_zeros();
     u >>= shift;
     v >>= shift;
-    
+
     // Rimuovi zeri trailing da u
     u >>= u.trailing_zeros();
 
@@ -34,7 +38,7 @@ fn gcd(mut u: usize, mut v: usize) -> usize {
 
 pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>) {
     *count = 0;
-    
+
     // Pre-calcola il limite per m
     let m_max = ((limit as f64).sqrt() as usize) + 1;
 
@@ -50,7 +54,7 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
         // Se m è pari, n deve essere dispari (start_n=1)
         // Se m è dispari, n deve essere pari (start_n=2)
         let start_n = 1 + (m & 1);
-        
+
         // Loop manuale invece di step_by per più controllo
         let mut n = start_n;
         while n < m {
@@ -71,7 +75,7 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
                     let mut ka = a;
                     let mut kb = b;
                     let mut kc = c;
-                    
+
                     for _ in 1..=k_max {
                         writeln!(out, "(EUCLIDE) {}^2 + {}^2 = {}^2", ka, kb, kc).unwrap();
                         ka += a;
@@ -80,7 +84,7 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
                     }
                 }
             }
-            
+
             n += 2;
         }
     }
