@@ -47,9 +47,6 @@ pub fn stream_triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl
             let mut kc = c;
 
             while kc <= limit {
-                // vec.push([ka, kb, kc]);
-
-                // write to buffered output
                 if let Some(out) = buf.as_deref_mut() {
                     writeln!(out, "{}^2 + {}^2 = {}^2", ka, kb, kc).unwrap();
                 }
