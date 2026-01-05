@@ -3,28 +3,17 @@ use std::io::Write;
 // Binary GCD algorithm
 #[inline(always)]
 pub fn gcd(mut u: usize, mut v: usize) -> usize {
-    if u == 0 {
-        return v;
-    }
-    if v == 0 {
-        return u;
-    }
+    if u == 0 { return v; }
+    if v == 0 { return u; }
 
     let shift = (u | v).trailing_zeros();
-    u >>= shift;
-    v >>= shift;
-
     u >>= u.trailing_zeros();
-
     loop {
         v >>= v.trailing_zeros();
-
         if u > v {
             std::mem::swap(&mut u, &mut v);
         }
-
         v -= u;
-
         if v == 0 {
             return u << shift;
         }
@@ -34,9 +23,9 @@ pub fn gcd(mut u: usize, mut v: usize) -> usize {
 pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>) {
     *count = 0;
 
-    let m_max = ((limit as f64).sqrt() as usize) + 1;
+    let m_max = ((limit as f32).sqrt() as usize) + 1;
 
-    for m in 2..=m_max {
+    for m in 2..m_max {
         let m2 = m * m;
 
         if m2 + 1 > limit {
@@ -45,8 +34,7 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
 
         let start_n = 1 + (m & 1);
 
-        let mut n = start_n;
-        while n < m {
+        for n in (start_n..=m).step_by(2) {
             if gcd(m, n) == 1 {
                 let n2 = n * n;
                 let a = m2 - n2;
@@ -69,8 +57,6 @@ pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>
                     }
                 }
             }
-
-            n += 2;
         }
     }
 }
