@@ -36,6 +36,18 @@ impl Iterator for TripleIter {
     }
 }
 
+pub fn generate(
+    limit: usize,
+    method: Method,
+    count: &mut usize,
+    buf: Option<&mut impl std::io::Write>,
+) {
+    match method {
+        Method::Euclid => euclid::generate(limit, count, buf),
+        Method::Berggren => berggren::generate(limit, count, buf, berggren::INITIAL_TRIPLE),
+    }
+}
+
 pub fn triples(limit: usize, method: Method) -> impl TripleGenerator {
     TripleIter::new(limit, method)
 }
@@ -61,7 +73,12 @@ mod tests {
     use super::euclid::generate as euclid_triples;
     use std::io::Cursor;
 
-    const LIMITS: [usize; 8] = [10, 50, 100, 500, 1000, 2000, 5000, 10000];
+    const LIMITS: [usize; 15] = [
+        10, 50, 100, 500, 1_000,
+        2_000, 5_000, 10_000, 20_000,
+        50_000, 75_000, 100_000,
+        200_000, 500_000, 1_000_000
+    ];
 
     #[test]
     fn test_triples_count() {
@@ -192,6 +209,27 @@ mod tests {
             while let Some((_a, _b, _c)) = berggren_iter.next() {
                 berggren_count += 1;
             }
+            assert_eq!(euclid_count, berggren_count);
+        }
+    }
+
+    #[test]
+    fn test_generate_function() {
+        for &limit in &LIMITS {
+            let mut euclid_count = 0;
+            let mut berggren_count = 0;
+            super::generate(
+                limit,
+                super::Method::Euclid,
+                &mut euclid_count,
+                None::<&mut Cursor<Vec<u8>>>,
+            );
+            super::generate(
+                limit,
+                super::Method::Berggren,
+                &mut berggren_count,
+                None::<&mut Cursor<Vec<u8>>>,
+            );
             assert_eq!(euclid_count, berggren_count);
         }
     }
