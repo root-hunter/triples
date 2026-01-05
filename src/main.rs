@@ -1,52 +1,62 @@
+#![feature(portable_simd)]
+use std::simd::{Mask, Simd, StdFloat, cmp::{SimdPartialEq, SimdPartialOrd}};
+
+// const N: usize = 8192;
+const N: usize = 8192;
+const LANE: usize = 8;
+
 fn main() {
-    let n: usize = 20000;
-
-    // a^2 + b^2 = c^2
-    // c = sqrt(a^2 + b^2)
-
+    let mut mat = Vec::with_capacity(N * 2);
     let start_time = std::time::Instant::now();
 
-    let mut mat = vec![vec![0; 3]; n * 2];
+    let n_simd = Simd::splat(N as f64);
 
-    println!("Calculating Pythagorean triples up to {}...", n);
+    for a in 2..N {
+        let x = (a * a) as f64;
+        let x_simd = Simd::splat(x);
 
-    let mut count = 0;
+        let mut b = a;
+        while b <= N {
+            // batch di 8 b
+            let mut b_values = [0f64; LANE];
+            let mut max_b = LANE;
 
-    for a in 2..n {
-        let x = a * a;
-
-        for b in a..n {
-            let y = b * b;
-            let c_squared = (x + y) as f64;
-
-            let z = c_squared.sqrt();
-
-            if z.fract() != 0.0 {
-                continue;
+            for i in 0..LANE {
+                if b + i < N {
+                    b_values[i] = (b + i) as f64;
+                } else {
+                    b_values[i] = 0.0;
+                    max_b = i;
+                    break;
+                }
             }
 
-            if z as usize > n {
-                break;
+            let b_simd = Simd::<f64, 8>::from_array(b_values);
+            let c2_simd = b_simd * b_simd + x_simd;
+            let c_simd = c2_simd.sqrt();
+
+            // Maschera per verificare quali c sono interi e <= n
+            let mask = (c_simd.fract().simd_eq(Simd::splat(0.0))) 
+                & (c_simd.simd_lt(n_simd)) & b_simd.simd_lt(c_simd);
+
+            let c_array = c_simd.to_array();
+            let b_array = b_simd.to_array();
+
+            for i in 0..LANE {
+                if mask.test(i) && i < max_b {
+                    mat.push([a, b_array[i] as usize, c_array[i] as usize]);
+                }
             }
 
-            mat[count][0] = a;
-            mat[count][1] = b;
-            mat[count][2] = z as usize;
-
-            count += 1;
+            b += LANE;
         }
     }
 
-    for i in 0..count {
-        let a = mat[i][0];
-        let b = mat[i][1];
-        let z = mat[i][2];
-
-        println!("{}^2+{}^2={}^2", a, b, z);
+    for t in &mat {
+        println!("{}^2+{}^2={}^2", t[0], t[1], t[2]);
     }
 
-    println!("Found {} Pythagorean triples.", count);
-
     let duration = start_time.elapsed();
-    println!("Time elapsed in expensive_function() is: {:?}", duration);
+    println!("Found {} triples.", mat.len());
+    println!("Time elapsed: {:?}", duration);
 }
