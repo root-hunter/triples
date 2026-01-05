@@ -21,8 +21,6 @@ pub fn gcd(mut u: usize, mut v: usize) -> usize {
 }
 
 pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>) {
-    *count = 0;
-
     let m_max = ((limit as f32).sqrt() as usize) + 1;
 
     for m in 2..m_max {
