@@ -1,4 +1,4 @@
-const N: usize = 10000;
+const N: usize = 100000;
 
 fn gcd(a: usize, b: usize) -> usize {
     if b == 0 {
@@ -9,8 +9,9 @@ fn gcd(a: usize, b: usize) -> usize {
 }
 
 fn main() {
-    let mut mat = Vec::with_capacity(N * 2);
     let start_time = std::time::Instant::now();
+
+    let mut count = 0;
 
     for m in 2.. {
         let m2 = m * m;
@@ -27,7 +28,8 @@ fn main() {
 
                 let mut k = 1;
                 while k * c <= N {
-                    mat.push([k * a, k * b, k * c]);
+                    println!("{}^2 + {}^2 = {}^2", k * a, k * b, k * c);
+                    count += 1;
                     k += 1;
                 }
             }
@@ -37,11 +39,7 @@ fn main() {
         }
     }
 
-
-    for t in &mat {
-    }
-
+    println!("Trovati {} risultati", count);
     let duration = start_time.elapsed();
-    println!("Found {} triples.", mat.len());
     println!("Time elapsed: {:?}", duration);
 }
