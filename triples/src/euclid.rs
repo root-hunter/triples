@@ -105,17 +105,17 @@ impl Iterator for EuclidIter {
                 return Some(res);
             }
 
+            let m = self.m;
+            let n = self.n;
+
             self.n += 2;
-            while self.n >= self.m {
+            if self.n >= self.m {
                 self.m += 1;
                 if self.m > self.m_max {
                     return None;
                 }
                 self.n = 1 + (self.m & 1);
             }
-
-            let m = self.m;
-            let n = self.n;
 
             if gcd(m, n) != 1 {
                 continue;

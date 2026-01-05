@@ -11,7 +11,7 @@ fn measure_euclide(limit: usize) -> f64 {
     let start_time = Instant::now();
 
     for (a, b, c) in euclid::EuclidIter::new(limit) {
-        println!("{} {} {}", a, b, c);
+        println!("(Euclid Iter) {}^2 + {}^2 = {}^2", a, b, c);
         count += 1;
     }
 
