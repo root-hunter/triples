@@ -57,16 +57,25 @@ mod tests {
     use crate::{berggren, euclid};
 
     use super::utils::gcd;
+
+    const GCD_TESTS: &[(usize, usize, usize)] = &[
+        (48, 18, 6),
+        (0, 5, 5),
+        (7, 0, 7),
+        (0, 0, 0),
+        (270, 192, 6),
+        (17, 13, 1),
+        (100, 25, 25),
+        (3421, 1234, 1),
+        (123456, 789012, 12),
+        (4294967295, 65536, 1),
+    ];
+
     #[test]
     fn test_gcd() {
-        assert_eq!(gcd(48, 18), 6);
-        assert_eq!(gcd(0, 5), 5);
-        assert_eq!(gcd(7, 0), 7);
-        assert_eq!(gcd(0, 0), 0);
-        assert_eq!(gcd(270, 192), 6);
-        assert_eq!(gcd(17, 13), 1);
-        assert_eq!(gcd(100, 25), 25);
-        assert_eq!(gcd(3421, 1234), 1);
+        for &(a, b, expected) in GCD_TESTS {
+            assert_eq!(gcd(a, b), expected, "gcd({}, {}) should be {}", a, b, expected);
+        }
     }
 
     use super::berggren::generate as berggren_triples;
