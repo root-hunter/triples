@@ -2,7 +2,7 @@
 use std::simd::{Mask, Simd, StdFloat, cmp::{SimdPartialEq, SimdPartialOrd}};
 
 // const N: usize = 8192;
-const N: usize = 8192;
+const N: usize = 8192 * 2;
 const LANE: usize = 8;
 
 fn main() {
