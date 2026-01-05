@@ -47,3 +47,15 @@ save-on-file-run:
 	cargo run --release --package save-on-file
 
 save-on-file: save-on-file-build save-on-file-run
+
+# Iterators Example
+iterators-clean:
+	cargo clean --package iterators
+
+iterators-build:
+	cargo build --release --package iterators
+
+iterators-run:
+	cargo run --release --package iterators
+
+iterators: iterators-build iterators-run

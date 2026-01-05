@@ -6,6 +6,7 @@ members = [
     "examples/big_limits",
     "examples/print_triples",
     "examples/save_on_file",
+    "examples/iterators",
 ]
 default-members = [
     "triples",
