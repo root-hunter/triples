@@ -1,14 +1,8 @@
-[package]
-name = "triples"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+members = [
+    "triples",
+    "examples/benchmark",
+]
 
-[dependencies]
-
-[profile.release]
-opt-level = 3
-lto = "fat"
-codegen-units = 1
-panic = "abort"
-strip = true
-target-cpu = "native"
+[workspace.dependencies]
+triples = { path = "triples" }

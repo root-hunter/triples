@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 plotters = "0.3.7"
-triples = { path = "../../" }
+triples = { workspace = true}
 
 [profile.release]
 opt-level = 3
