@@ -34,7 +34,7 @@ const LIMITS: [usize; 26] = [
 fn measure_euclide(limit: usize) -> f64 {
     let mut count = 0;
     let start_time = Instant::now();
-    euclide::stream_triples(limit, &mut count, None::<&mut BufWriter<std::io::StdoutLock>>);
+    euclide::triples(limit, &mut count, None::<&mut BufWriter<std::io::StdoutLock>>);
     let duration = start_time.elapsed();
     println!("Euclide found {} triples up to {}", count, limit);
     duration.as_secs_f64()
@@ -43,7 +43,7 @@ fn measure_euclide(limit: usize) -> f64 {
 fn measure_berggren(limit: usize) -> f64 {
     let mut count = 0;
     let start_time = Instant::now();
-    berggren::stream_triples(limit, &mut count, None::<&mut BufWriter<std::io::StdoutLock>>, [3, 4, 5]);
+    berggren::triples(limit, &mut count, None::<&mut BufWriter<std::io::StdoutLock>>, [3, 4, 5]);
     let duration = start_time.elapsed();
     println!("Berggren found {} triples up to {}", count, limit);
     duration.as_secs_f64()

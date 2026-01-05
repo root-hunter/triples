@@ -37,7 +37,7 @@ fn gcd(mut u: usize, mut v: usize) -> usize {
     u << shift
 }
 
-pub fn stream_triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>) {
+pub fn triples(limit: usize, count: &mut usize, mut buf: Option<&mut impl Write>) {
     *count = 0;
     let m_max = ((limit as f64).sqrt() as usize) + 1;
 
