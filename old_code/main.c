@@ -38,7 +38,7 @@ void my_calc(long MAX){
         }
     }
 
-    stampa(MAX*2,mat, cont);
+    // stampa(MAX*2,mat, cont);
 
     printf("Trovati %d risultati\n", cont);
 }

@@ -11,3 +11,4 @@ lto = "fat"
 codegen-units = 1
 panic = "abort"
 strip = true
+target-cpu = "native"
